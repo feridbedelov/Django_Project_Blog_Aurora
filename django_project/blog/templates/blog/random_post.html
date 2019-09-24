@@ -1,0 +1,13 @@
+ <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <a class="mr-2" href="/user/{{random_obj.author.username}}">{{random_obj.author.username}}</a>
+                        <br>
+                        <small class="text-muted">{{ random_obj.modified_on }}</small>
+                        <h5 class="card-title">{{random_obj.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"> Category : {{random_obj.category.name}}</h6>
+                        <p class="card-text">{{random_obj.content|truncatewords:4}}</p>
+                        <a href="/post/{{random_obj.slug}}" class="card-link">Learn More</a>
+                        
+                    </div>
+ </div>
+<br>

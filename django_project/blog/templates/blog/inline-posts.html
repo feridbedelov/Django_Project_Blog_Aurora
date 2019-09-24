@@ -1,0 +1,54 @@
+   
+            
+            <div class="card mb-3">
+            {% if post.image %}
+            
+            <img src="{{post.image.url}}" class="card-img-top" style="height : 300px;" >
+          
+            {% endif %}
+            
+            <div class="card-body">
+            
+                <h5 class="card-title">{{post.title}}</h5>
+                <p class="card-text">{{post.content|truncatewords:4}}</p>
+                <small > IMDB Point: {{post.rating}}   </small>
+                <hr>
+                <a class="mr-2" href="/user/{{post.author.username}}">Author : {{post.author.username}}</a>
+                <a class="mr-2" href="/category/{{post.category.name}}">Category : {{post.category.name}}</a><br>
+                <p class="card-text"><small class="text-muted">{{ post.modified_on }}</small></p>
+                {% if object.draft %}
+                      <p>This is not published yet! </p>
+                    {% else %}
+                    {% endif %}
+                
+                {% if user.is_authenticated%}
+                      {% if not object.draft %}
+                          {% if user in object.watchlist.all %}
+                            <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/addwatchlist" role="button">Delete from  Watch List</a>
+                          {% else %}
+                            <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/addwatchlist" role="button">Add to Watch List</a>
+                          {% endif %}
+                      {% else %}
+                      {% endif %}
+                     
+                    {%endif%}
+              
+                <a role="button" href="/post/{{post.slug}}" class="btn btn-sm btn-outline-success">Learn More</a>
+                
+            </div>
+            </div>
+
+  
+ 
+{% comment %} <div class="jumbotron">
+
+                    <a class="mr-2" href="/user/{{post.author.username}}">{{post.author.username}}</a>
+                    <br>
+                    <small class="text-muted">{{ post.modified_on }}</small>
+                    <h1 class="display-4">{{post.title}}</h1>
+                    <p class="lead">{{post.content|truncatewords:4}}</p>
+                    <hr class="my-4">
+                   <p><a class="mr-2" href="/category/{{post.category.name}}">{{post.category.name}}</a></p>
+                    <a class="btn btn-primary btn-lg" href="/post/{{post.pk}}" role="button">Learn more</a>
+                     <a class="btn btn-primary btn-lg" href="#" role="button">Add to Watch List</a>
+                </div> {% endcomment %}

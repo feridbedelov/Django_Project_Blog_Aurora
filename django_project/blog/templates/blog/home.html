@@ -1,0 +1,71 @@
+{% extends "blog/layout.html" %}
+{% load blog_extras %}
+{% block content %}
+
+  <div class="container">
+    
+    <div class='row'>
+
+        <div class='col-md-2'>
+        
+           {% category_list %}
+        
+        </div>
+
+
+        <div class='col-md-7'>
+           {% for object in object_list %}
+                 {% include 'blog/inline-posts.html' with post=object %}
+            {% endfor %} 
+
+
+             {% if is_paginated %}
+
+                {% if page_obj.has_previous %}
+                  <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                  {% if page_obj.number == num %}
+                    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                  {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'4' %}
+                    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+                  {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+                  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                {% endif %}
+
+              {% endif %} 
+
+        </div> 
+
+
+      <div class='col-md-3'>
+          
+           <h3 class="alert alert-info">Random Post</h3> 
+           {% random_post %}
+
+           <h3 class="alert alert-info">Popular Post</h3> 
+           {% popular_post %}
+
+
+        
+        </div>
+
+
+    </div>
+  </div>
+  
+
+ 
+
+
+{% endblock content %}
+
+
+
+

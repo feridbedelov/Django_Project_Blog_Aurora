@@ -1,0 +1,83 @@
+{% extends "blog/layout.html" %}
+{% load blog_extras %}
+
+{% block content %}
+
+  <div class="container">
+
+    <div class='row'>
+
+        <div class='col-md-3'>
+        
+           {% category_list %}
+        
+        </div>
+
+          
+
+
+         <div class='col-md-9'>
+      <h1 class="mb-3">Watch List  of {{ request.user.username }} ({{ page_obj.paginator.count }})</h1>
+           
+           {% for object in object_list %}
+              <div class="card mb-3">
+              {% if object.image %}
+            
+            <img src="{{object.image.url}}" class="card-img-top" style="height : 300px;" >
+          
+            {% endif %}
+
+            <div class="card-body">
+
+              
+                <h5 class="card-title">{{object.title}}</h5>
+                <p class="card-text">{{object.content|truncatewords:4}}</p>
+                <small > IMDB Point: {{object.rating}}   </small>
+                <hr>
+                <a class="mr-2" href="/user/{{object.author.username}}">Author : {{object.author.username}}</a>
+                <a class="mr-2" href="/category/{{object.category.name}}">Category : {{object.category.name}}</a><br>
+                <p class="card-text"><small class="text-muted">{{object.modified_on }}</small></p>
+                {% if object.draft %}
+                      <p>This is not published yet! </p>
+                    {% else %}
+                    {% endif %}
+                <a role="button"  href="/post/{{object.slug}}/addwatchlist" class="btn btn-sm btn-outline-success">Delete From Watch List</a>
+                <a role="button" href="/post/{{object.slug}}" class="btn btn-sm btn-outline-success">Learn More</a>
+            </div>
+            </div>
+
+
+
+
+            {% endfor %}  
+            {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">First</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-4' and num < page_obj.number|add:'4' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+      {% endif %}
+
+    {% endif %}
+
+          </div> 
+
+
+    </div>
+  </div>
+   
+ 
+{% endblock content %}
+

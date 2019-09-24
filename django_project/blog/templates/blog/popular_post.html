@@ -1,0 +1,13 @@
+ <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <a class="mr-2" href="/user/{{popular_post.author.username}}">{{popular_post.author.username}}</a>
+                        <br>
+                        <small class="text-muted">{{ popular_post.modified_on }}</small>
+                        <h5 class="card-title">{{popular_post.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"> Category : {{popular_post.category.name}}</h6>
+                        <p class="card-text">{{popular_post.content|truncatewords:4}}</p>
+                        <a href="/post/{{popular_post.slug}}" class="card-link">Learn More</a>
+                        
+                    </div>
+ </div>
+<br>

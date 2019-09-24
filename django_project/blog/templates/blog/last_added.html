@@ -1,0 +1,17 @@
+ 
+{% for post in posts_last2  %}
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <a class="mr-2" href="/user/{{post.author.username}}">{{post.author.username}}</a>
+                        <br>
+                        <small class="text-muted">{{ post.modified_on }}</small>
+                        <h5 class="card-title">{{post.title}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted"> Category : {{post.category.name}}</h6>
+                        <p class="card-text">{{post.content|truncatewords:4}}</p>
+                        <a href="/post/{{post.slug}}" class="card-link">Learn More</a>
+                        
+                    </div>
+                </div>
+                <br>
+{% endfor %}
+                

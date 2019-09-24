@@ -1,0 +1,179 @@
+{% extends "blog/layout.html" %}
+{% load blog_extras%}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div class="container">
+
+    <div class='row'>
+
+        <div class='col-md-9'>
+
+          
+            <div class="card mb-3">
+            {% if object.image %}
+            
+            <img src="{{object.image.url}}" class="card-img-top"  style="height : 500px;">
+          
+            {% endif %}
+            
+              <div class="card-body">
+              
+                  <h5 class="card-title">{{object.title}}</h5>
+                  {% if not object.draft %}
+                  
+                  <p class="text-success"> Read Count  {{object.read_count}} </p>
+                  
+                  {% endif %}
+                  <p class="text-primary">Read Time - {% if object.read_time <= 1 %} < 1 Minute {% else %} {{object.read_time}} Minutes  {% endif %} </p>
+                  <p class="card-text">{{object.content}}</p>
+                  <small > IMDB Point: {{object.rating}}    </small>
+
+                  <hr>
+                  <a class="mr-2" href="/user/{{object.author.username}}">Author : {{object.author.username}}</a>
+                  <a class="mr-2" href="/category/{{object.category.name}}">Category : {{object.category.name}}</a><br>
+                  <p class="card-text"><small class="text-muted">{{ object.modified_on }}</small></p>
+                      {% if object.draft %}
+                        <p>This is not published yet! </p>
+                      
+                      {% endif %}
+                      {% if user.is_authenticated%}
+                        {% if not object.draft %}
+                            {% if user in object.watchlist.all %}
+                              <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/addwatchlist" role="button">Delete from  Watch List</a>
+                            {% else %}
+                              <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/addwatchlist" role="button">Add to Watch List</a>
+                            {% endif %}
+                        
+                        {% endif %}
+                        
+                        {% if object.author == user %}
+                          <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/update" role="button">Update</a>
+                          <a class="btn btn-primary btn-sm" href="/post/{{object.slug}}/delete" role="button">Delete</a>
+                        {%endif%}
+                      {%endif%}
+              </div>
+            </div>
+            {% if object.draft  %}
+            
+            {% else  %}
+            <div>
+               <h3>Comments</h3>       
+                <br>        
+                {% if user.is_authenticated %}
+                <form method="POST" action=".">{% csrf_token %}
+                {{comment_form|crispy}}
+                <input type="submit" value="Post Comment" class="btn btn-success" >
+                </form>
+                
+                {% else %}
+                {% endif %}
+
+
+                <br><br><br>   
+              {% for comment  in  comments %}
+              
+              <blockquote class="blockquote">
+                <p class="mb-0">{{comment.content}}</p>
+                <footer class="blockquote-footer">{{comment.user.username}} | {{comment.timestamp|timesince }} |
+                  {% if comment.children.count > 0  %} {{comment.children.count}} Comment{% if  comment.children.count > 1 %}s {% endif %}  {% endif %}
+                  |
+                  {% if user.is_authenticated  %}
+                    {% if comment.user == user %}
+                      <a class="mr-2" href="{{comment.get_delete_url}}"> Delete  </a><br>
+                  
+                    {% endif %}
+                  
+                  {% endif %}
+                
+
+
+                 </footer>
+                <br>
+
+
+
+              <div class='comment-reply'  >
+
+                <h4>Replies</h4>
+                <hr>
+                {% for child_comment in comment.children %}
+                
+                    <blockquote class="blockquote">
+                      <p>{{child_comment.content}}</p>
+                      <footer class="blockquote-footer">{{child_comment.user.username}} | {{child_comment.timestamp|timesince }} |
+                         {% if user.is_authenticated  %}
+                          {% if child_comment.user == user %}
+                             <a class="mr-2" href="{{child_comment.get_delete_url}}"> Delete  </a><br>
+                  
+                          {% endif %}
+                  
+                        {% endif %}
+                       
+                      </footer>
+                    </blockquote>
+
+                {% endfor %}
+
+
+
+                  {% if user.is_authenticated %}
+                    <form method="POST" action=".">{% csrf_token %}
+                      {{comment_form|crispy}}
+                      <input type="hidden" name="parent_id" value='{{comment.id}}' >
+                      <input type="submit" value="Reply" class="btn btn-success" >
+                   </form>
+                
+                
+                {% endif %}
+                <hr>
+                <br>
+              </div>
+
+
+
+              </blockquote>
+              {% endfor %}
+            </div>
+            {% endif %}
+        
+        </div>
+
+
+          <div class='col-md-3'>
+
+               <h3 class="alert alert-info">Last Added</h3> 
+               {% last_addedposts %}
+                
+                
+                
+                
+          </div> 
+
+
+    </div>
+
+
+
+</div>
+
+{% comment %} 
+<script type="text/javascript">
+ $(document).on('click', '.comment-reply-btn', function() {
+      // alert("hello");
+      event.preventDefault();
+      console.log("ben geldiiimm")
+      var parent = $(this).parent()
+      console.log(parent)
+      parent.next(".comment-reply").fadeToggle();
+      // alert('bitti');
+  });
+
+</script> {% endcomment %}
+
+
+
+{% endblock content %}
+
+
+
